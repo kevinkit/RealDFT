@@ -91,8 +91,8 @@ int dft(int size,double* input,double* output)
 	
 	for(x=0; x < size; x++)
 		{
-			output[i << 1] += input[i]*coef_cos[i*size +x];
-			output[(i << 1) +1] += input[i]*coef_sin[i*size +x];
+			output[i << 1] += input[x]*coef_cos[i*size +x];
+			output[(i << 1) +1] += input[x]*coef_sin[i*size +x];
 		}
 	}
 	return 1;
