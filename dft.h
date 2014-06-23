@@ -33,6 +33,22 @@ int complex_mult_vec(int size, double* input_1, double* input_2, double* Re, dou
         return 1;
 }
 
+double* zeroadding(int size, double* input)
+{
+	
+	double* larger = (double*) malloc(sizeof(double) * ((size << 1) +1));
+
+	int i = 0;
+	for(; i < size; i++)
+	{
+		larger[i] = input[i];
+		larger[i + size] = 0;
+	}	
+
+
+	return larger;
+
+}
 
 //just works for real signals !!!! (input is just a one dimensional vector
 int dft(int size,double* input,double* output)
@@ -87,7 +103,6 @@ int dft(int size,double* input,double* output)
 
 			if(computed == 0)
 			{
-				printf("this takes time \n");
 				coef_cos[i*size +x] =  cos(turn*2*M_PI);
 				coef_sin[i*size +x] = sin(turn*2*M_PI);
 				computed++;
@@ -185,12 +200,6 @@ int idft(int size,double* input,double* output)
 
         }
 
-
-
-	printf("size = %d", size);
-
-
-
         //The real transformation
         for(i=0; i < size; i++)
         {
@@ -219,36 +228,22 @@ int convolute(int size, double* input,double* input_2, double* output)
         int j = 0;
 	
 	//fill up vectors
-	double* input_filled = (double*) malloc(sizeof(double)*((4*size) +1));
-	double* input_2_filled = (double*) malloc(sizeof(double)*((4*size) +1));
+	double* input_filled = (double*) malloc(sizeof(double)*((2*size) +1));
+	double* input_2_filled = (double*) malloc(sizeof(double)*((2*size) +1));
 	
 	double turn = 0;
         double turn_perc = 0;
 
-	for(i=0; i < size; i++)
-	{
-		printf("input[%i] = %f \n",i, input[i]);
-	}
 
 
 	//making a new vector
-	for(i=0; i < size; i++)
-	{
-		input_filled[i] = input[i];
-		input_2_filled[i] = input_2[i];
-	}
-
-	//Zero-Adding to get rid off zyclic
-	for(i=0; i < 3*size; i ++)
-	{
-		input_filled[i + size] = 0;
-                input_2_filled[i + size] = 0;
-	}
-	size = 3*size +1;
-	for(i = 0; i < size; i++)
-	{
-		printf("input_1 now[%i] = %f \t input_2 now[%i] = %f \n", i, input_filled[i], i , input_2_filled[i]);
-	}
+	//and adding zeros
+	
+	input_filled = zeroadding(size, input);
+	input_2_filled = zeroadding(size, input_2);
+	
+	
+	size = 2*size +1;
 
 	double* coef_cos = (double*) malloc(sizeof(double) * ((size*size + size) +2));
 	double* coef_sin = (double*) malloc(sizeof(double) * ((size*size + size) +2));
@@ -329,7 +324,6 @@ int convolute(int size, double* input,double* input_2, double* output)
 			}
         	}
 
-
 		//The multiplikation itself -> Convoltuon
 		for(i=0; i < size; i++)
 		{
@@ -338,13 +332,31 @@ int convolute(int size, double* input,double* input_2, double* output)
 
 
 		}
-
 		idft(size, conv, output);
-
-
 }
 
+int convolute_td(int size, double* input , double* input_2, double* convolute)
+{
+	int i = 0;
+	int x = 0;
 
+	double* input_fill = (double*) malloc(sizeof(double) * (3*size +1));
+	double* input_fill_2 = (double*) malloc(sizeof(double) * (3*size +1));
+
+	input_fill = zeroadding(size, input);
+	input_fill_2 = zeroadding(size, input_2);
+
+	size = 2*size +1;
+	for(; i < size; i++)
+	{
+		for(x=0; x < i; x++)
+		{
+			convolute[i] += input_fill[i-x] * input_fill_2[size - x];		
+		}	
+	}
+	return 1;
+
+}
 
 #endif
 
