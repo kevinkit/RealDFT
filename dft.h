@@ -358,5 +358,74 @@ int convolute_td(int size, double* input , double* input_2, double* convolute)
 
 }
 
+int findcofs(int size, double* coef_cos, double* coef_sin)
+{
+        int x = 0;
+        int i = 0;
+        int computed = 0;
+        int b = 0;
+
+        double turn = 0;
+        double turn_perc = 0;
+
+         for(;i < size; i++)
+        {
+
+                //Kernel Vorbereitung -> später werden diese Werte direkt in den Kernel geschrieben!
+                for(x=0;x < size; x++)
+                {
+                        computed = 0;
+                        turn = (((double)i*(double)x/(double)size));
+                        turn_perc = turn - (int) turn;
+
+                        if(turn_perc == 0 || turn_perc == 1)
+                        {
+                                coef_cos[i*size +x] = 1;
+                                coef_sin[i*size +x] = 0;
+                                computed++;
+                        }
+                        if(turn_perc == 0.25)
+                        {
+                                coef_cos[i*size +x] = 0;
+                                coef_sin[i*size +x] = -1;
+                                computed++;
+
+                        }
+                        if(turn_perc == 0.5)
+                        {
+                                coef_cos[i*size +x] = -1;
+                                coef_sin[i*size +x] = 0;
+                                computed ++;
+                        }
+                        if(turn_perc == 0.75)
+                        {
+                                coef_cos[i*size +x] = 0;
+                                coef_sin[i*size +x] = 1;
+                                computed++;
+                        }
+
+                        if(computed == 0)
+                        {
+                                coef_cos[i*size +x] = cos(turn*2*M_PI);
+                                coef_sin[i*size +x] = sin(turn*2*M_PI);
+                                computed++;
+                        }
+                         if(computed > 1)
+                        {
+
+                                printf("Something went horrible wrong in the idft \n");
+                                return -1;
+                        }
+
+                }
+
+
+        }
+        return 1;
+}
+
+
+
+
 #endif
 
