@@ -587,7 +587,44 @@ int conv_cofs(int size,double* input, double* input_2,  double* coef_cos, double
 }
 
 
+void fastdft(int size, double input, double* coef_cos, double* coef_sin, double* Re, double* Im)
+{
+        int i = 0;
+        int j = 0;
+        int x = 0;
+        int g = 0;
 
+        double* input_filled = (double*) malloc(sizeof(double) * (2*size +2));
+        zeroadding(size, input, input_filled);
+        size = 2*size +1;
+        double* Re_matrix = (double*) malloc(sizeof(double)*(size*size + size + 2)); 
+        double* Im_matrox = (double*) malloc(sizeof(double)*(size*size + size + 2));
+        for(j=0; j < size; j++)
+        {
+                for(i=j; i < size; i++)
+                {       
+                        Re_matrix[size*j + i] = coef_cos[i*size + j] * input_filled[i];
+                        Im_matrix[size*j + i] = coef_sin[i*size + j] * input_filled[i];
+                
+                        Re_matrix[size*i +j] = Re_matrix[size*j +i];
+                        Im_matrix[size*i +j] = Im_matrix[size*j +i];
+                        
+                }
+        
+        }
+
+        for(j = 0; j  < size; j++)
+        {
+                for(i=0; i < size; i++)
+                {
+                        Re[j] += Re_matrix[size*i +j];
+                        Im[j] += Im_matrix[size*i +j];
+
+                }
+
+        }
+
+}
 
 
 
