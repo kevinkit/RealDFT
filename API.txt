@@ -1,0 +1,156 @@
+At any time all the input vectors have the same length and are one dimensional and non-imaginary.
+At any time you need to compile with including the standard math libray ( - lm)
+
+
+--------------------------------------------------------------------------------------------------------------------------
+double* memallec(double* array, int* size, int index,int size_index)
+
+This function was "just for fun" and helps when you are not quite sure about your indexing. You simply add this function to your loop and it will create a new vector with more memory and filled with old values. This memory may leak some memory due to allocation more and more when you index is wrong but for testing your program it should work or for some special cases
+
+double*	array 			The array you want to proove
+int* 		size 				The size of your array, you can point to a vector of sizes
+int 		index 			The index of the loop(or the index where the array will be written in)
+int			size_index	Where the size of your array you want to test is in int* size
+
+Returns the new Array.
+
+
+--------------------------------------------------------------------------------------------------------------------------
+int complex_mult_mat(int size, double* input_1 , double* input_2, double* output)
+
+Complex Multiplication of two vectors where the result will be stored in a vector where the even index[0,2,4,....] are the real and the odd indexes[1,3,5...] the imaginary numbers
+
+int			size				The size of the vectors you want to multiplicate
+double* input				The first vector
+double* input_2			The second vector
+double* output			The output vector
+
+
+Returns -1 when an error occurs, else 1
+
+--------------------------------------------------------------------------------------------------------------------------
+int complex_mult_vec(int size, double* input_1, double* input_2, double* Re, double* Im)
+
+Complex Multiplication where the imaginary and the real results are stored in two different vectors (Re & Im)
+
+
+int			size			The size of the vectors you want to multiplicate
+double* input_1 	The first vector
+double* input_2		The second vector
+double* Re				The real result
+double* Im				The imaginary result
+
+Returns 1
+
+--------------------------------------------------------------------------------------------------------------------------
+void zeroadding(int size, double* input, double* output)
+
+This function adds zeros to your vector, so it becoms double as long as it was before. 
+CAUTION! You need to specify enough memory for your vector when you are using this function (double the size as it usually needs!).
+
+
+
+int			size			The normal size of your array
+double* input			The array you want to zeropad
+double* output		The zero padded array
+
+--------------------------------------------------------------------------------------------------------------------------
+int dft(int size, double* input, double* output)
+
+Makes the dft from the vector input
+
+int			size			The size of your array you want to transform
+double* input			The array you want to transform
+double*	output		The transformed array
+
+Returns -1 when error occurs, else 1
+--------------------------------------------------------------------------------------------------------------------------
+int idft(int size, double* input, double* output)
+
+Makes the transformation from fourier back to time discrete.
+
+
+int			size			The size of your array you want to transform back
+double* input			The array you want to transform back
+double* output		The transformation back
+
+Returns -1 when error occurs, else 1
+--------------------------------------------------------------------------------------------------------------------------
+int convolute(int size, double* input, double* input_2, double* output)
+
+Makes a convolution buy using the dft.
+This function makes the zero padding for you.
+
+int			size		The size of your arrays you want to convolute
+double* input		The first array you want to convolute..
+double* input_2 ...with this second array
+double* output	The result
+
+Returns -1 when error occurs, else 1
+--------------------------------------------------------------------------------------------------------------------------
+
+int convolute_td(int size, double* input, double* input_2, double* convolute)
+
+Makes a time discrete convolution.
+This function makes the zeropadding for you (which is needed in this function)
+
+
+double*	convolute		The Resullt
+
+ALL OTHER PARAMTERS ARE LIKE THE ONES BEFORE
+
+
+Returns 1
+--------------------------------------------------------------------------------------------------------------------------
+
+int findcofs(int size, double* coef_cos, double coef_sin)
+
+Finds the coeffizients needed for a dft. When your vector is always the same length you only need to use this function one time and then use the function conv_cofs. 
+
+int			size			The size of your input arrays
+double* coef_cos	The cosinus arrays (will be computed in this function). The allocated memory must be (size*size +3)
+double* coef_sin	The sinus arrays(will be computed in this function). The allocated memory must be (size*size +3)
+
+
+
+Returns -1 when error occurs, else 1
+--------------------------------------------------------------------------------------------------------------------------
+
+int conv_cofs(int size, double* input, double* input_2, double* coef_cos, double* coef_sin, double* output)
+
+Makes a convolution using the dft and the cosinus and sinus coeffizients which were computed before by findcofs.
+This function makes the zeropadding for you, make sure that the input arrays have double the size allocated.
+
+
+int				size			The size of your input arrays
+double* 	input			The first array you want to convoutle with...
+double* 	input_2 	...this array
+double* 	coef_cos	The cosinus coeffizients
+double*		coef_sin	The sinus coeffizients
+double*		output		The Result of the convolution
+
+
+Returns -1 when error occurs else 1
+--------------------------------------------------------------------------------------------------------------------------
+int fconv(int size, double* input, double* input_2, double* output, int debug)
+
+
+Makes a convolution which does not need any zeropadding at all.
+
+int			size			The size of your input arrays
+double* input			The first array you want to convolute with...
+double* input_2		..this array
+double*	output		The result of the convoltuon
+int			debug			Set "1" for debug information , set to any other number to surpress output
+
+
+
+Returns -1 when error occurs, else 0
+
+
+
+
+
+
+
+
