@@ -7,10 +7,10 @@ double* memallec(double* array, int* size, int index,int size_index)
 
 This function was "just for fun" and helps when you are not quite sure about your indexing. You simply add this function to your loop and it will create a new vector with more memory and filled with old values. This memory may leak some memory due to allocation more and more when you index is wrong but for testing your program it should work or for some special cases
 
-double*	array 			The array you want to proove
-int* 		size 				The size of your array, you can point to a vector of sizes
-int 		index 			The index of the loop(or the index where the array will be written in)
-int			size_index	Where the size of your array you want to test is in int* size
+double* array       The array you want to proove
+int*    size        The size of your array, you can point to a vector of sizes
+int     index       The index of the loop(or the index where the array will be written in)
+int     size_index  Where the size of your array you want to test is in int* size
 
 Returns the new Array.
 
