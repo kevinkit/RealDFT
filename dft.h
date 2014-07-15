@@ -627,6 +627,48 @@ void fastdft(int size, double input, double* coef_cos, double* coef_sin, double*
 }
 
 
+int fconv(int size, double* input, double* input_2, double* output, int debug)
+{
+        int z,i = 0;
+
+        //Results bigger than size 
+        for(;z < size; z++)
+        {
+                for(i=z; i < size; i++)
+                {
+                        output[z + size] = input[i] * input_2[size - i + z];
+                        if(debug == 1)
+                        {
+                                printf("output[%i] = input[%i] * input_2[%i] \n %f = %f * %f \n \n", z+size,i,size-i+z,output[z+size],input[i],input_2[size-i+z]);
+                                if(z+size > 2*size)
+                                {
+                                        printf("memory corruption, wanted to access %d but size is %d", z+size, 2*size);
+                                        return -1;
+                                }
+                                if((size - i + z) > size)
+                                {
+                                        printf("memory corruption, wanted to access %d but size is %d",(size-i +z), size);
+                                        return -1;
+                                }
+                        }
+                }
+        }
+
+        //Results smaller than size
+        for(z=0; z < size; z++)
+        {
+                for(i=0; i < z; i++)
+                {
+                        output[z] = input[i] * input_2[z -i];
+                        if(debug == 1)
+                        {
+                                printf("output[%d] = input[%d] * input_2[%d] \n %f = %f * %f",z,i,z-i, output[z],input[i],input_2[z-i]);
+                        }
+                }
+        }
+
+        return 0;
+}
 
 
 
